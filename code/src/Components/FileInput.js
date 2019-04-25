@@ -81,7 +81,6 @@ class FileInput extends Component {
   generateValueFile = e => {
     e.preventDefault();
     const values = this.props.createValueTemplate();
-    console.log(values);
 
     var element = document.createElement('a');
     element.setAttribute(
@@ -120,7 +119,7 @@ class FileInput extends Component {
             </p>
           </InputForFile>
           <InputForFile>
-            <p>{this.state.keysError}</p>
+            <p>{this.state.valuesError}</p>
             {!this.props.keys.length && <p>Please add keys first</p>}
             {!!this.props.keys.length && (
               <button onClick={this.generateValueFile}>
