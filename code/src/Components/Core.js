@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import AddKey from './AddKey';
 import AddCoreValues from './AddCoreValues';
 import CoreSolution from './CoreSolution';
+import { coreInitializer } from '../Solver/TheCore';
 
 const Content = styled.div`
   max-width: 1200px;
@@ -57,6 +58,29 @@ class Core extends Component {
     });
   };
 
+  createValueTemplate = () => {
+    const sets = coreInitializer(this.state.keys);
+
+    const values = {};
+
+    sets.forEach(set => (values[Array.from(set.set).join('')] = set));
+
+    return values;
+  };
+
+  addKeysFromFile = newKeys => {
+    const keys = [...this.state.keys];
+    newKeys.forEach(key => {
+      if (keys.indexOf(key) === -1) keys.push(key);
+    });
+    this.setState({ keys });
+  };
+
+  addValuesFromFile = newValues => {
+    const values = { ...newValues };
+    this.setState({ keysDone: true, valuesDone: true, values });
+  };
+
   render() {
     const { keysDone, valuesDone } = this.state;
     return (
@@ -69,11 +93,15 @@ class Core extends Component {
               addKey={this.addKey}
               keysDone={this.keysDone}
               keys={this.state.keys}
+              addKeysFromFile={this.addKeysFromFile}
+              addValuesFromFile={this.addValuesFromFile}
+              createValueTemplate={this.createValueTemplate}
             />
           ) : !valuesDone ? (
             <AddCoreValues
               keys={this.state.keys}
               valuesDone={this.valuesDone}
+              createValueTemplate={this.createValueTemplate}
             />
           ) : (
             // <p>val</p>

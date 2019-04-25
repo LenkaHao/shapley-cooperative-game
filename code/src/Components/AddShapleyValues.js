@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { powerSet } from '../Solver/util';
 
 const Form = styled.form`
   max-width: 800px;
@@ -30,19 +29,7 @@ class AddShapleyValues extends Component {
   };
 
   componentDidMount() {
-    const sets = powerSet(this.props.keys);
-    sets.shift();
-
-    sets.sort((a, b) => {
-      if (a.length === b.length) {
-        return a.toString() < b.toString();
-      }
-      return a.length - b.length;
-    });
-
-    const values = {};
-
-    sets.forEach(set => (values[set.join('')] = 0));
+    const values = this.props.createValueTemplate();
 
     this.setState({ values });
   }

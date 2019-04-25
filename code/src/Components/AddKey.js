@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import FileInput from './FileInput';
 
 const Input = styled.input``;
 const KeyList = styled.ul`
@@ -11,6 +12,10 @@ const KeyList = styled.ul`
   li {
     padding: 0 5px;
   }
+`;
+
+const Submit = styled.form`
+  margin: 10px;
 `;
 
 class AddKey extends Component {
@@ -38,25 +43,35 @@ class AddKey extends Component {
     const { keys } = this.props;
     return (
       <div>
-        <p>Current key count {keys.length}</p>
-        <KeyList>
-          {keys.map(key => (
-            <li key={key}>{key}</li>
-          ))}
-        </KeyList>
-        <form onSubmit={this.handleKeyAdd}>
-          <Input
-            type="text"
-            name="key"
-            value={this.state.key}
-            onChange={this.handleChange}
-            placeholder="Add a key"
+        <div>
+          <p>Current key count {keys.length}</p>
+          <KeyList>
+            {keys.map(key => (
+              <li key={key}>{key}</li>
+            ))}
+          </KeyList>
+          <form onSubmit={this.handleKeyAdd}>
+            <Input
+              type="text"
+              name="key"
+              value={this.state.key}
+              onChange={this.handleChange}
+              placeholder="Add a key"
+            />
+            <Input type="submit" value="Add key" />
+          </form>
+          <Submit onSubmit={this.handleKeyDone}>
+            <Input type="submit" value="Finished adding keys" />
+          </Submit>
+        </div>
+        <div>
+          <FileInput
+            keys={this.props.keys}
+            addKeysFromFile={this.props.addKeysFromFile}
+            addValuesFromFile={this.props.addValuesFromFile}
+            createValueTemplate={this.props.createValueTemplate}
           />
-          <Input type="submit" value="Add key" />
-        </form>
-        <form onSubmit={this.handleKeyDone}>
-          <Input type="submit" value="Finished adding keys" />
-        </form>
+        </div>
       </div>
     );
   }

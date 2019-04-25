@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { coreInitializer } from '../Solver/TheCore';
 
 const Form = styled.form`
   max-width: 800px;
@@ -9,14 +8,6 @@ const Form = styled.form`
   flex-direction: row;
   flex-wrap: wrap;
 
-  /* label {
-    width: 23%;
-    margin: 2% 5%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  } */
   .submit {
     width: 100%;
     margin: 0 auto;
@@ -51,11 +42,7 @@ class AddCoreValues extends Component {
   };
 
   componentDidMount() {
-    const sets = coreInitializer(this.props.keys);
-
-    const values = {};
-
-    sets.forEach(set => (values[Array.from(set.set).join('')] = set));
+    const values = this.props.createValueTemplate();
 
     this.setState({ values });
   }

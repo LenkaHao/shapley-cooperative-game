@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import AddKey from './AddKey';
 import AddShapleyValues from './AddShapleyValues';
 import ShapleySolution from './ShapleySolution';
+import { powerSet } from '../Solver/util';
 
 const Content = styled.div`
   max-width: 1200px;
@@ -57,6 +58,37 @@ class Shapley extends Component {
     });
   };
 
+  createValueTemplate = () => {
+    const sets = powerSet(this.state.keys);
+    sets.shift();
+
+    sets.sort((a, b) => {
+      if (a.length === b.length) {
+        return a.toString() < b.toString();
+      }
+      return a.length - b.length;
+    });
+
+    const values = {};
+
+    sets.forEach(set => (values[set.join('')] = 0));
+
+    return values;
+  };
+
+  addKeysFromFile = newKeys => {
+    const keys = [...this.state.keys];
+    newKeys.forEach(key => {
+      if (keys.indexOf(key) === -1) keys.push(key);
+    });
+    this.setState({ keys });
+  };
+
+  addValuesFromFile = newValues => {
+    const values = { ...newValues };
+    this.setState({ keysDone: true, valuesDone: true, values });
+  };
+
   render() {
     const { keysDone, valuesDone } = this.state;
     return (
@@ -69,11 +101,15 @@ class Shapley extends Component {
               addKey={this.addKey}
               keysDone={this.keysDone}
               keys={this.state.keys}
+              addKeysFromFile={this.addKeysFromFile}
+              addValuesFromFile={this.addValuesFromFile}
+              createValueTemplate={this.createValueTemplate}
             />
           ) : !valuesDone ? (
             <AddShapleyValues
               keys={this.state.keys}
               valuesDone={this.valuesDone}
+              createValueTemplate={this.createValueTemplate}
             />
           ) : (
             <ShapleySolution

@@ -13,16 +13,17 @@ export const coreInitializer = keys => {
     keys.forEach(key => {
       set.add(key);
     });
-    return { set, values };
+    return { set: [...set], values };
   });
 
   return sets;
 };
 
-const computeSetValue = (set, values) => {
+// Computes total value of values that are in both sets
+const computeSetValue = (set, values, parentSet) => {
   let value = 0;
-  [...set].forEach(key => {
-    value += values[key];
+  set.forEach(key => {
+    if (parentSet.indexOf(key) !== -1) value += values[key];
   });
 
   return value;
@@ -33,12 +34,14 @@ export const coreSolver = keyObjects => {
     const { set, values } = current;
 
     // Compute set value
-    let setValue = computeSetValue(set, values);
     let isCore = true;
 
     // Loop over all sets and check core condition;
     Object.values(keyObjects).forEach(A => {
-      if (computeSetValue(A.set, values) < computeSetValue(A.set, A.values))
+      if (
+        computeSetValue(A.set, values, set) <
+        computeSetValue(A.set, A.values, set)
+      )
         isCore = false;
     });
     return { keyCombined, isCore };
